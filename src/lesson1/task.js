@@ -2,7 +2,7 @@
   Напишите функцию, которая принимает 1 аргумент и возварщает его тип
 */
 function getDataType(variable) {
-
+  return typeof variable;
 }
 
 /*
@@ -14,7 +14,25 @@ function getDataType(variable) {
   'object-function' - если функция
 */
 function getDataTypePseudoName(variable) {
+  let typeOfArg = typeof variable;
 
+  switch (typeOfArg) {
+    case 'undefined':
+      return 'primitive-special';
+    case 'function':
+      return 'object-function';
+    case 'object': {
+      if (Array.isArray(variable)) {
+        return 'object-array';
+      }
+      if (variable === null) {
+        return 'primitive-special';
+      }
+      return 'object';
+    }
+    default:
+      return 'primitive';
+  }
 }
 
 
@@ -25,7 +43,9 @@ function getDataTypePseudoName(variable) {
   и -1 в другом случае
 */
 function compareByType(a, b) {
-
+  if (a === b) { return 1; }
+  else if (a == b) { return 0; }
+  else { return -1; }
 }
 
 // Numbers
@@ -37,7 +57,7 @@ function compareByType(a, b) {
   в любом другом случае возврвщвет -1
 */
 function increase(value) {
-
+  return typeof value === 'number' ? value + 1 : -1;
 }
 
 /*
@@ -45,7 +65,7 @@ function increase(value) {
   и в случае если аргумент не Infinity или NaN возвращает строку 'safe' иначе 'danger'
 */
 function testForSafeNumber(value) {
-
+  return Number.isFinite(value) && !Number.isNaN(value) ? 'safe' : 'danger';
 }
 
 
@@ -57,7 +77,7 @@ function testForSafeNumber(value) {
   и возвращает массив из елементов строки разделенных по пробелу ' '
 */
 function stringToArray(str) {
-
+  return str.split(' ');
 }
 
 
@@ -66,7 +86,7 @@ function stringToArray(str) {
   и возвращает часть этой строки до первой запятой
 */
 function getStringPart(str) {
-
+  return str.slice(0, str.indexOf(','));
 }
 
 /*
@@ -75,7 +95,13 @@ function getStringPart(str) {
   false в противоположном случае
 */
 function isSingleSymbolMatch(str, symbol) {
+  let strArr = Array.from(str);
 
+	if (strArr.filter((sym) => sym.toLowerCase() == symbol.toLowerCase()).length === 1) {
+		return str.indexOf(symbol);
+	} else {
+		return false;
+	}
 }
 
 /*
@@ -85,7 +111,7 @@ function isSingleSymbolMatch(str, symbol) {
   или строку разделенную "-" если не задан
 */
 function join(array, separator) {
-
+  return separator ? array.join(separator) : array.join('-');
 }
 
 
@@ -94,7 +120,7 @@ function join(array, separator) {
   и возвращает один состоящий из элементов перового и второго (последовательно сначала первый потом второй)
 */
 function glue(arrA, arrB) {
-
+  return [...arrA, ...arrB];
 }
 
 
@@ -103,7 +129,15 @@ function glue(arrA, arrB) {
   и возвращает другой массив отсортированный от большего к меньшему
 */
 function order(arr) {
-
+  return arr.sort((a, b) => {
+    if (a > b) {
+      return -1;
+    } else if (a < b) {
+      return 1;
+    } else {
+      return 0;
+    }
+  })
 }
 
 
@@ -112,7 +146,7 @@ function order(arr) {
   и возвращает другой без чисел которые меньше 0
 */
 function removeNegative(arr) {
-
+  return arr.filter(item => item >= 0);
 }
 
 /*
@@ -122,7 +156,7 @@ function removeNegative(arr) {
   [1,2,3], [1, 3] => [2]
 */
 function without(arrA, arrB) {
-
+  return arrA.filter(item => !arrB.includes(item));
 }
 
 /*
@@ -158,7 +192,22 @@ function calcComparison(expression) {
 */
 function evalKey(obj, expression) {
 
+  if (!expression.startsWith('.')) {
+    throw new Error('incorrect expression')
+  } else {
+    let expArr = expression.split('.');
+    expArr.shift();
+
+    return expArr.reduce((obj, property) => {
+      if (!obj[property]) {
+        throw new Error('property not found');
+      } else {
+        return obj[property];
+      }
+    }, obj);
+  }
 }
+
 
 export default {
   getDataType,
