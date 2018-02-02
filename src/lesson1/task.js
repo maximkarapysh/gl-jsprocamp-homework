@@ -97,11 +97,11 @@ function getStringPart(str) {
 function isSingleSymbolMatch(str, symbol) {
   let strArr = Array.from(str);
 
-	if (strArr.filter((sym) => sym.toLowerCase() == symbol.toLowerCase()).length === 1) {
-		return str.indexOf(symbol);
-	} else {
-		return false;
-	}
+  if (strArr.filter((sym) => sym.toLowerCase() == symbol.toLowerCase()).length === 1) {
+    return str.indexOf(symbol);
+  } else {
+    return false;
+  }
 }
 
 /*
@@ -167,7 +167,12 @@ function without(arrA, arrB) {
   '12/6' => 2
 */
 function calcExpression(expression) {
-
+  try {
+    let res = (new Function(`return ${expression}`))();
+    return res;
+  } catch (error) {
+    return NaN;
+  }
 }
 
 /*
@@ -179,7 +184,12 @@ function calcExpression(expression) {
   '100>5' => true
 */
 function calcComparison(expression) {
-
+  try {
+    let res = (new Function(`return ${expression}`))();
+    return res;
+  } catch (err) {
+    throw err;
+  }
 }
 
 /*
