@@ -3,15 +3,18 @@
   Function should return a number - amount of optional parameters that were passed into function.
   Hint: you are allowed to modify both function definition and function body.
 */
-export function countOptional() {
-
+export function countOptional(first, second, ...rest) {
+	return rest.length;
 }
 
 /*
   Write your implementation of native Function.prototype.bind method
 */
 export function bindContext(fn, context) {
-
+	let bindArgs = [].slice.call(arguments, 2);
+	return function (...rest) {
+		return fn.apply(context, [...bindArgs, ...rest]);
+	};
 }
 
 
@@ -30,7 +33,11 @@ export function bindContext(fn, context) {
   Take to account, that you should track log call index starting from 1
 */
 export function addLogCapability(object) {
-
+	let counter = 1;
+	object.log = function () {
+		let checkName = this.name ? `my name is ${this.name}` : 'I dont have name';
+		return `Log message #${counter++}: ${checkName}`;
+	}
 }
 
 /*
@@ -39,14 +46,16 @@ export function addLogCapability(object) {
   myLogger('first message'); //=> My Topic: first message
 */
 export function logger(topic) {
-
+	return (message) => `${topic}: ${message}`;
 }
 
 /*
   Implement left to right compose function
 */
-export function compose() {
 
+export function compose() {
+	let args = [...arguments];
+	return data => args.reduce((value, func) => func(value), data);
 }
 
 /*
@@ -59,15 +68,20 @@ export function compose() {
   const sumWith4 = partialSum(4);
   sumWith4(5) // 9
 */
-export function partial(fn) {
 
+export function partial(fn) {
+	return function (...args) {
+		return function (...newArgs) {
+			return fn.apply(null, [...args, ...newArgs]);
+		}
+	}
 }
 
 export default {
-  countOptional,
-  bindContext,
-  addLogCapability,
-  logger,
-  compose,
-  partial
+	countOptional,
+	bindContext,
+	addLogCapability,
+	logger,
+	compose,
+	partial
 };
